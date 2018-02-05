@@ -25,9 +25,9 @@ type KeycloakClient = KeycloakModule.KeycloakClient;
 @Injectable()
 export class KeycloakService {
   static keycloakAuth: KeycloakClient = Keycloak({
-    url: 'http://gregors-macbook-pro.local:8080/auth',
-    realm: 'demo',
-    clientId: 'ionic',
+    url: 'http://10.250.100.13:8080/auth',
+    realm: 'vv',
+    clientId: 'mobile-app',
   });
 
   static init(options?: any): Promise<any> {

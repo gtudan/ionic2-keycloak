@@ -87,4 +87,5 @@
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
     <engine name="ios" spec="^4.5.4" />
     <engine name="browser" spec="5.0.3" />
+    <allow-navigation href="http://172.29.21.94:8100" />
 </widget>
