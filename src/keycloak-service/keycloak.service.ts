@@ -20,14 +20,15 @@
 import { Injectable } from '@angular/core';
 
 let Keycloak = require("./keycloak"); // load keycloak.js locally
-type KeycloakClient = KeycloakModule.KeycloakClient;
+type KeycloakClient = Keycloak.KeycloakInstance;
 
 @Injectable()
 export class KeycloakService {
   static keycloakAuth: KeycloakClient = Keycloak({
-    url: 'http://10.250.100.13:8080/auth',
-    realm: 'vv',
-    clientId: 'mobile-app',
+    url: 'http://service-e.tech.visualvest.de/auth/',
+    realm: 'VV',
+    clientId: 'vv-mobile-app',
+
   });
 
   static init(options?: any): Promise<any> {
