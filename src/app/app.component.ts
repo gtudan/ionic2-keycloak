@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, Config } from 'ionic-angular';
 
 import { StatusBar } from '@ionic-native/status-bar';
+import { Deeplinks } from '@ionic-native/deeplinks';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { ProfilePage } from '../pages/profile/profile';
@@ -10,6 +11,7 @@ import { WelcomePage } from '../pages/welcome/welcome';
 import { TranslateService } from '@ngx-translate/core'
 
 import { KeycloakService } from '../keycloak-service/keycloak.service';
+import {LoginPage} from "../pages/login/login";
 
 @Component({
   template: `<ion-nav #content [root]="rootPage"></ion-nav>`
@@ -25,8 +27,9 @@ export class MyApp {
   ];
 
   constructor(private translate: TranslateService,
-    platform: Platform,
+    private platform: Platform,
     private config: Config,
+    private deeplinks: Deeplinks,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
     keycloak: KeycloakService) {
@@ -40,8 +43,20 @@ export class MyApp {
       splashScreen.hide();
 
       console.log("init Keycloak");
-      KeycloakService.init({ onLoad: 'check-sso', checkLoginIframe: false });
+      KeycloakService.init({ checkLoginIframe: false });
     });
+  }
+
+  ngAfterViewInit() {
+    this.platform.ready().then(() => {
+      this.deeplinks.routeWithNavController(this.nav, {
+        '/login': LoginPage,
+      }).subscribe((match) => {
+        console.log('Successfully routed', match);
+      }, (nomatch) => {
+        console.warn('Unmatched Route', nomatch);
+      });
+    })
   }
 
   initTranslate() {

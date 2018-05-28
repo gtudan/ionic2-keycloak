@@ -25,9 +25,9 @@ type KeycloakClient = Keycloak.KeycloakInstance;
 @Injectable()
 export class KeycloakService {
   static keycloakAuth: KeycloakClient = Keycloak({
-    url: 'http://service-e.tech.visualvest.de/auth/',
-    realm: 'VV',
-    clientId: 'vv-mobile-app',
+    url: 'http://gregors-macbook-pro.local:8080/auth/',
+    realm: 'demo',
+    clientId: 'vv-app-gt',
 
   });
 
@@ -50,7 +50,7 @@ export class KeycloakService {
 
   login(): Promise<any> {
     return new Promise((resolve, reject) => {
-      KeycloakService.keycloakAuth.login()
+      KeycloakService.keycloakAuth.login({redirectUri: 'vvapp://login'})
         .success(() => {
           resolve();
         })

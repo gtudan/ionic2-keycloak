@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>MyApp</name>
+<widget id="de.visualvest.cordova-test" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Keycloak Browsertab</name>
     <description>Ionic-Keycloak app</description>
     <author email="rolich.s@gmail.com">Sergey Rolich</author>
     <content src="index.html" />
@@ -77,6 +77,9 @@
         <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
     </platform>
+    <allow-navigation href="http://172.29.21.94:8100" />
+    <allow-navigation href="http://192.168.178.23:8100" />
+    <engine name="browser" spec="5.0.3" />
     <plugin name="cordova-plugin-compat" spec="^1.2.0" />
     <plugin name="cordova-plugin-console" spec="^1.1.0" />
     <plugin name="cordova-plugin-device" spec="^1.1.7" />
@@ -85,7 +88,13 @@
     <plugin name="cordova-plugin-statusbar" spec="^2.4.1" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
-    <allow-navigation href="http://172.29.21.94:8100" />
-    <engine name="ios" spec="^4.5.4" />
-    <engine name="browser" spec="5.0.3" />
+    <engine name="ios" spec="~4.5.4" />
+    <plugin name="cordova-plugin-safariviewcontroller" spec="^1.5.3" />
+    <plugin name="cordova-universal-links-plugin" spec="^1.2.1" />
+    <plugin name="ionic-plugin-deeplinks" spec="~1.0.15">
+        <variable name="URL_SCHEME" value="vvapp" />
+        <variable name="DEEPLINK_SCHEME" value="https" />
+        <variable name="DEEPLINK_HOST" value="app.visualvest.de" />
+        <variable name="ANDROID_PATH_PREFIX" value="/" />
+    </plugin>
 </widget>

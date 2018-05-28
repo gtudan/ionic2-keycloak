@@ -950,13 +950,50 @@
 
             if (type == 'cordova') {
                 loginIframe.enable = false;
+
                 var cordovaOpenWindowWrapper = function(loginUrl, target, options) {
-                    if (window.cordova && window.cordova.InAppBrowser) {
-                        // Use inappbrowser for IOS and Android if available
-                        return window.cordova.InAppBrowser.open(loginUrl, target, options);
+                  SafariViewController.isAvailable(function (available) {
+                    if (available) {
+                      SafariViewController.show({url: loginUrl},
+                        // this success handler will be invoked for the lifecycle events 'opened', 'loaded' and 'closed'
+                        function (result) {
+                          if (result.event === 'opened') {
+                            console.log('opened');
+                          } else if (result.event === 'loaded') {
+                            console.log('loaded');
+                          } else if (result.event === 'closed') {
+                            console.log('closed');
+                          }
+                        },
+                        function (msg) {
+                          console.log("KO: " + msg);
+                        })
                     } else {
-                        return window.open(loginUrl, target, options);
+                      var ref = window.open(loginUrl, target, options);
+                      ref.addEventListener('loadstart', function(event) {
+                        if (event.url.indexOf('http://localhost') == 0) {
+                          var callback = parseCallback(event.url);
+                          processCallback(callback, promise);
+                          ref.close();
+                          completed = true;
+                        }
+                      });
+
+                      ref.addEventListener('loaderror', function(event) {
+                        if (!completed) {
+                          if (event.url.indexOf('http://localhost') == 0) {
+                            var callback = parseCallback(event.url);
+                            processCallback(callback, promise);
+                            ref.close();
+                            completed = true;
+                          } else {
+                            promise.setError();
+                            ref.close();
+                          }
+                        }
+                      });
                     }
+                  });
                 };
                 return {
                     login: function(options) {
@@ -971,28 +1008,7 @@
                         var ref = cordovaOpenWindowWrapper(loginUrl, '_blank', o);
                         var completed = false;
 
-                        ref.addEventListener('loadstart', function(event) {
-                            if (event.url.indexOf('http://localhost') == 0) {
-                                var callback = parseCallback(event.url);
-                                processCallback(callback, promise);
-                                ref.close();
-                                completed = true;
-                            }
-                        });
 
-                        ref.addEventListener('loaderror', function(event) {
-                            if (!completed) {
-                                if (event.url.indexOf('http://localhost') == 0) {
-                                    var callback = parseCallback(event.url);
-                                    processCallback(callback, promise);
-                                    ref.close();
-                                    completed = true;
-                                } else {
-                                    promise.setError();
-                                    ref.close();
-                                }
-                            }
-                        });
 
                         return promise.promise;
                     },
@@ -1053,7 +1069,7 @@
                     },
 
                     redirectUri: function(options) {
-                        return 'http://localhost';
+                        return 'vvapp://login';
                     }
                 }
             }
