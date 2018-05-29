@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-(function( window, undefined ) {
+(function(window, undefined ) {
 
     var Keycloak = function (config) {
         if (!(this instanceof Keycloak)) {
@@ -45,8 +45,8 @@
 
             callbackStorage = createCallbackStorage();
 
-            if (initOptions && initOptions.adapter === 'cordova') {
-                adapter = loadAdapter('cordova');
+            if (initOptions && initOptions.adapter) {
+                adapter = loadAdapter(initOptions.adapter);
             } else if (initOptions && initOptions.adapter === 'default') {
                 adapter = loadAdapter();
             } else {
@@ -948,52 +948,45 @@
                 };
             }
 
+            if (type == 'cordova-native') {
+                loginIframe = false;
+
+                return {
+                    login: function (options) {
+                        var loginUrl = kc.createLoginUrl(options);
+
+                        var promise = createPromise();
+                        console.log(loginUrl);
+                        console.log(window.cordova.plugins);
+                        window.cordova.plugins.browsertab.openUrl(
+                          loginUrl,
+                          function (successResp) {
+                            if (successResp.event === 'closed') {
+                              promise.setSuccess();
+                            }
+                          },
+                          function (failureResp) {
+                            promise.setError(failureResp);
+                          });
+                        return promise.promise;
+
+                    },
+
+                    redirectUri: function(options) {
+                        return options.redirectUri;
+                    }
+                }
+            }
+
             if (type == 'cordova') {
                 loginIframe.enable = false;
-
                 var cordovaOpenWindowWrapper = function(loginUrl, target, options) {
-                  SafariViewController.isAvailable(function (available) {
-                    if (available) {
-                      SafariViewController.show({url: loginUrl},
-                        // this success handler will be invoked for the lifecycle events 'opened', 'loaded' and 'closed'
-                        function (result) {
-                          if (result.event === 'opened') {
-                            console.log('opened');
-                          } else if (result.event === 'loaded') {
-                            console.log('loaded');
-                          } else if (result.event === 'closed') {
-                            console.log('closed');
-                          }
-                        },
-                        function (msg) {
-                          console.log("KO: " + msg);
-                        })
+                    if (window.cordova && window.cordova.InAppBrowser) {
+                        // Use inappbrowser for IOS and Android if available
+                        return window.cordova.InAppBrowser.open(loginUrl, target, options);
                     } else {
-                      var ref = window.open(loginUrl, target, options);
-                      ref.addEventListener('loadstart', function(event) {
-                        if (event.url.indexOf('http://localhost') == 0) {
-                          var callback = parseCallback(event.url);
-                          processCallback(callback, promise);
-                          ref.close();
-                          completed = true;
-                        }
-                      });
-
-                      ref.addEventListener('loaderror', function(event) {
-                        if (!completed) {
-                          if (event.url.indexOf('http://localhost') == 0) {
-                            var callback = parseCallback(event.url);
-                            processCallback(callback, promise);
-                            ref.close();
-                            completed = true;
-                          } else {
-                            promise.setError();
-                            ref.close();
-                          }
-                        }
-                      });
+                        return window.open(loginUrl, target, options);
                     }
-                  });
                 };
                 return {
                     login: function(options) {
@@ -1008,7 +1001,28 @@
                         var ref = cordovaOpenWindowWrapper(loginUrl, '_blank', o);
                         var completed = false;
 
+                        ref.addEventListener('loadstart', function(event) {
+                            if (event.url.indexOf('http://localhost') == 0) {
+                                var callback = parseCallback(event.url);
+                                processCallback(callback, promise);
+                                ref.close();
+                                completed = true;
+                            }
+                        });
 
+                        ref.addEventListener('loaderror', function(event) {
+                            if (!completed) {
+                                if (event.url.indexOf('http://localhost') == 0) {
+                                    var callback = parseCallback(event.url);
+                                    processCallback(callback, promise);
+                                    ref.close();
+                                    completed = true;
+                                } else {
+                                    promise.setError();
+                                    ref.close();
+                                }
+                            }
+                        });
 
                         return promise.promise;
                     },
@@ -1069,7 +1083,7 @@
                     },
 
                     redirectUri: function(options) {
-                        return 'vvapp://login';
+                        return 'http://localhost';
                     }
                 }
             }

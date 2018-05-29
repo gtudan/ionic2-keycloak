@@ -43,7 +43,7 @@ export class MyApp {
       splashScreen.hide();
 
       console.log("init Keycloak");
-      KeycloakService.init({ checkLoginIframe: false });
+      KeycloakService.init({ adapter: 'cordova-native', checkLoginIframe: false, responseMode: 'query'});
     });
   }
 

@@ -19,6 +19,7 @@ import { KeycloakHttp, KEYCLOAK_HTTP_PROVIDER } from '../keycloak-service/keyclo
 
 import { Deeplinks } from "@ionic-native/deeplinks";
 import {LoginPage} from "../pages/login/login";
+import { BrowserTab } from '@ionic-native/browser-tab';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -53,6 +54,7 @@ export function providers() {
     KeycloakService,
     KEYCLOAK_HTTP_PROVIDER,
     Deeplinks,
+    BrowserTab,
 
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }

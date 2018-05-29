@@ -28,6 +28,7 @@ export class KeycloakService {
     url: 'http://gregors-macbook-pro.local:8080/auth/',
     realm: 'demo',
     clientId: 'vv-app-gt',
+    adapter: 'cordova-native'
 
   });
 
