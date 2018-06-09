@@ -37,7 +37,7 @@ export class KeycloakService {
     return new Promise((resolve, reject) => {
       KeycloakService.keycloakAuth.init(options)
         .success(() => {
-          resolve();
+          resolve(event);
         })
         .error((errorData: any) => {
           reject(errorData);
@@ -51,7 +51,7 @@ export class KeycloakService {
 
   login(): Promise<any> {
     return new Promise((resolve, reject) => {
-      KeycloakService.keycloakAuth.login({redirectUri: 'vvapp://login'})
+      KeycloakService.keycloakAuth.login({redirectUri: 'https://example.com/app/login'})
         .success(() => {
           resolve();
         })
@@ -62,8 +62,9 @@ export class KeycloakService {
   }
 
   logout(): Promise<any> {
+    console.log("Logout");
     return new Promise((resolve, reject) => {
-      KeycloakService.keycloakAuth.logout()
+      KeycloakService.keycloakAuth.logout({redirectUri: 'https://example.com/app/logout'})
         .success(() => {
           resolve();
         })
@@ -73,14 +74,12 @@ export class KeycloakService {
     })
   }
 
-
-
   account() {
     KeycloakService.keycloakAuth.accountManagement();
   }
 
   register() {
-    KeycloakService.keycloakAuth.register();
+    KeycloakService.keycloakAuth.register({redirectUri: 'https://example.com/app/login'});
   }
 
   profile(): Promise<any> {

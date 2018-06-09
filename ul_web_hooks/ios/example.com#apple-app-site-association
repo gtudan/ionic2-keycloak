@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "ASDF12345678.com.example.keycloakionic",
+        "paths": [
+          "/app/login",
+          "/app/logout"
+        ]
+      }
+    ]
+  }
+}

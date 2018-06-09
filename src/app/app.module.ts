@@ -15,11 +15,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { KeycloakService } from '../keycloak-service/keycloak.service';
-import { KeycloakHttp, KEYCLOAK_HTTP_PROVIDER } from '../keycloak-service/keycloak.http';
-
-import { Deeplinks } from "@ionic-native/deeplinks";
-import {LoginPage} from "../pages/login/login";
-import { BrowserTab } from '@ionic-native/browser-tab';
+import { KEYCLOAK_HTTP_PROVIDER } from '../keycloak-service/keycloak.http';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -36,7 +32,6 @@ let pages = [
   MyApp,
   ProfilePage,
   WelcomePage,
-  LoginPage,
 ];
 
 export function declarations() {
@@ -53,8 +48,6 @@ export function providers() {
     StatusBar,
     KeycloakService,
     KEYCLOAK_HTTP_PROVIDER,
-    Deeplinks,
-    BrowserTab,
 
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }

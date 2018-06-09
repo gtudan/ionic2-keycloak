@@ -31,13 +31,13 @@ export class ProfilePage {
   }
 
   account() {
-    this.keycloak.account();
+    this.keycloak.account()
   }
 
   logout() {
     this.keycloak.logout()
       .then(() => {
-        console.log("logout")
+        console.log("logout");
         this.navCtrl.popToRoot();
       })
       .catch((error: any) => {
